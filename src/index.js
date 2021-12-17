@@ -4,7 +4,6 @@ import { pageElemenets } from './page-elements';
 import { fetchCountries } from './api-countries';
 
 const { input, list, country } = pageElemenets;
-// console.log(API);
 
 const DEBOUNCE_DELAY = 300;
 
@@ -14,35 +13,21 @@ function handleUserInput(e) {
   console.log(e.target.value);
   fetchCountries(e.target.value)
     .then(result => {
-      return result.filter(res => {
-        console.log(res.capital[0]);
-        return res.capital[0].toLowerCase().includes(e.target.value);
-      });
-    })
-    .then(console.log);
+      return result.filter(res =>{
+        return res.name.common.toLowerCase().includes(e.target.value, )})
+    }).then(renderList)
 }
 
-// function renderList(countries) {
-//   console.log(input.value);
-
-//   const arr = countries.filter(country => {
-//     console.log(country.capital[0]);
-//     console.log(country.capital[0].includes(input.value));
-//   });
-//   return arr;
-// }
-
-// console.log(input.value);
-// console.log(country.capital[0][0]);
-// if () {
-//   const liItem = document.createElement('li');
-//   liItem.textContent = country.capital;
-//   list.appendChild(liItem);
-// }
-
-// countries.map(country => {
-//   console.log(country);
-//   const liItem = document.createElement('li');
-//   liItem.textContent = country.capital;
-//   list.appendChild(liItem);
-// });
+function renderList(countries){
+  console.log(countries)
+  if(countries.length > 10){
+    alert('picets');
+    return;
+  }
+  const markUp = countries.map(({population, flags: {svg,png}, name: {official}, languages})=>{
+     return `<li class='list-item'><img src='${png}' width='40' height='20'>   ${official}</li>`
+  }).join("");
+  
+  console.log(markUp)
+   list.insertAdjacentHTML("afterbegin", markUp);
+}
