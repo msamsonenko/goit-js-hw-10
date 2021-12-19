@@ -11,17 +11,19 @@ const DEBOUNCE_DELAY = 300;
 input.addEventListener('input', debounce(handleUserInput, DEBOUNCE_DELAY));
 
 function handleUserInput(e) {
+  const userInput = e.target.value;
   list.innerHTML = '';
   country.innerHTML = '';
 
-  console.log(e.target.value);
-  if (e.target.value === '') {
+  console.log(e.target.value.trim().length);
+  if (userInput === '') {
     Notiflix.Notify.info('Please enter country name');
+    return;
   }
-  fetchCountries(e.target.value)
+  fetchCountries(userInput)
     .then(result => {
       return result.filter(res => {
-        return res.name.common.toLowerCase().includes(e.target.value);
+        return res.name.common.toLowerCase().includes(userInput.trim());
       });
     })
     .then(renderList)
@@ -32,6 +34,9 @@ function handleUserInput(e) {
 
 function renderList(countries) {
   console.log(countries);
+  if (countries.length === 0) {
+    return Notiflix.Notify.failure('no countries found');
+  }
   if (countries.length > 10) {
     Notiflix.Notify.info('Too many matches found!');
     return;
@@ -52,12 +57,14 @@ function renderCountryMarkUp(countries) {
     capital,
   } = countries;
   const markUp = `
-                <img src='${png}' width='40' height='30'>   
-                <p>${common}</p>
-                <ul>
-                  <li><span>Capital:</span><span>${capital[0]}</span></li>
-                  <li><span>Population:</span><span>${population}</span></li>
-                  <li><span>Languages:</span><span>${Object.values(languages)}</span></li>
+                <div class="country-info__header">
+                  <img src='${png}' width='40' height='30'>   
+                  <p class="country-name">${common}</p>
+                </div>
+                <ul class="country-details">
+                  <li><span>Capital:</span>${capital[0]}</li>
+                  <li><span>Population:</span>${population}</li>
+                  <li><span>Languages:</span>${Object.values(languages)}</li>
                 </ul>
               `;
 
