@@ -23,8 +23,14 @@ body {
   padding: 0;
   margin: 0;
 }
+.list-item {
+  display: flex;
+}
 .list-item:not(:last-child) {
   margin-bottom: 10px;
+}
+.list-item > img {
+  margin-right: 10px;
 }
 .country-info__header {
   display: flex;
